@@ -10,10 +10,10 @@ window.onload = function() {
 
 	 getUserMedia({
 					 "audio": {
-							 "mandatory": {
+							 "true": {
 
 							 },
-							 "optional": []
+						
 					 },}, gotStream);
 };
 function getUserMedia(dictionary, callback) {
