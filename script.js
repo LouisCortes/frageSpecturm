@@ -337,7 +337,7 @@ const displayShaderSource = `
     void main () {
       vec2 uv = vUv;
         float t1 = texture2D(uTex,vUv).x;
-        gl_FragColor = vec4(step(vUv.y,t1));
+        gl_FragColor = vec4(step(vUv.y,t1)+0.2);
     }
 `;
 
