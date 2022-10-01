@@ -11,9 +11,8 @@ window.onload = function() {
 	 getUserMedia({
 					 "audio": {
 							 "true": {
-
 							 },
-						
+
 					 },}, gotStream);
 };
 function getUserMedia(dictionary, callback) {
@@ -335,9 +334,19 @@ const displayShaderSource = `
     uniform float time;
     uniform vec2 resolution;
     void main () {
-      vec2 uv = vUv;
-        float t1 = texture2D(uTex,vUv).x;
-        gl_FragColor = vec4(step(vUv.y,t1)+0.2);
+			vec2 uv = vUv-0.5;
+			uv.x *= resolution.x/resolution.y;
+					float s1 = texture2D(uTex,vec2(length(uv)),0.1).x;
+				float t2 = texture2D(uTex,vec2(length(uv))).x;
+				float ba = smoothstep(1.,0.25,length((vUv.x-0.5)*2.));
+				float t1 = pow(texture2D(uTex,vec2(pow(length(uv.y),2.5))).x,4.)*ba;
+				float e = 0.0005;
+				float t3 = floor(pow(texture2D(uTex,vec2(pow(length(uv.y-e),2.5))).x,4.)*20.)/20.;
+				float t4 = floor(pow(texture2D(uTex,vec2(pow(length(uv.y+e),2.5))).x,4.)*20.)/20.;
+				float t5 = normalize(vec2(abs(t3-t4),0.01)).x;
+				float r1 = clamp(t2+t1+t5*0.25*ba,0.,1.);
+				vec3 co = mix(mix(vec3(1.),(3.*abs(1.-2.*fract((r1)*0.5+0.3+vec3(0.,-1./3.,1./3.)))-1.),0.25),vec3(1.,0.,0.),t5*0.25)*r1;
+				gl_FragColor = vec4(co,1.);
     }
 `;
 
