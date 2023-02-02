@@ -71,7 +71,7 @@ function createTexture(gl) {
 }
 
 function copyAudioDataToTexture(gl, audioData, textureArray) {
-  for (let i = 0; i < audioData.length; i++) {
+  for (let i = 0; i < audioData.length*0.5; i++) {
     textureArray[4 * i + 0] = audioData[i] // R
     textureArray[4 * i + 1] = audioData[i] // G
     textureArray[4 * i + 2] = audioData[i] // B
