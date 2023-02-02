@@ -326,7 +326,7 @@ const displayShaderSource = `
     void main () {
 			vec2 uv = vUv-0.5;
 			uv.x *= resolution.x/resolution.y;
-				float t2 = texture2D(uTex,vec2(length(uv*0.3))).x;
+				float t2 = texture2D(uTex,vec2(length(uv.y*0.3))).x;
 				float t1 = pow(texture2D(uTex,vec2(pow(length(uv.x),2.5))).x,4.);
 				float r1 = clamp(t2+t1,0.,1.);
 				float r2 = mix(r1,1.-r1,smoothstep(0.3,0.4,texture2D(uTex,vec2(0.1))).x);
