@@ -31,20 +31,11 @@ function gotStream(stream) {
     mediaStreamSource = audioContext.createMediaStreamSource(stream);
     analyser = audioContext.createAnalyser();
     mediaStreamSource.connect( analyser );
-  //   updatePitch();
+
 rendertex();
 
 }
 
-/*function updatePitch()
-{
-   spectrum = new Uint8Array(analyser.frequencyBinCount);
-  requestAnimationFrame(updatePitch);
-  analyser.getByteFrequencyData(spectrum);
-   fragSpectrumArray = new Uint8Array(4 * spectrum.length);
-
-}*/
-//const spectrum = null;
 function rendertex(){
    const spectrum = new Uint8Array(analyser.frequencyBinCount);
   analyser.getByteFrequencyData(spectrum);
@@ -111,7 +102,7 @@ function pointerPrototype () {
 const { gl, ext } = getWebGLContext(canvas);
 
 if (isMobile()) {
-    config.DYE_RESOLUTION = 512;
+    //config.DYE_RESOLUTION = 512;
   //  config.SUNRAYS_RESOLUTION = 512;
 }
 if (!ext.supportLinearFiltering) {
@@ -329,24 +320,16 @@ const displayShaderSource = `
     precision highp float;
     precision highp sampler2D;
     varying vec2 vUv;
-  //  uniform sampler2D uTexture;
+
   uniform sampler2D uTex;
-    uniform float time;
     uniform vec2 resolution;
     void main () {
 			vec2 uv = vUv-0.5;
 			uv.x *= resolution.x/resolution.y;
-				//	float s1 = texture2D(uTex,vec2(length(uv)),0.1).x;
 				float t2 = texture2D(uTex,vec2(length(uv*0.3))).x;
-				//float ba = smoothstep(1.,0.25,length((vUv.x-0.5)*2.));
 				float t1 = pow(texture2D(uTex,vec2(pow(length(uv.x),2.5))).x,4.);
-				float e = 0.0005;
-			/*	float t3 = floor(pow(texture2D(uTex,vec2(pow(length(uv.y-e),2.5))).x,4.)*20.)/20.;
-				float t4 = floor(pow(texture2D(uTex,vec2(pow(length(uv.y+e),2.5))).x,4.)*20.)/20.;
-				float t5 = normalize(vec2(abs(t3-t4),0.01)).x;*/
 				float r1 = clamp(t2+t1,0.,1.);
-				vec3 co = mix(mix(vec3(1.),(3.*abs(1.-2.*fract((r1)*0.5+0.3+vec3(0.,-1./3.,1./3.)))-1.),0.25),vec3(1.,0.,0.),0.25)*r1;
-				gl_FragColor = vec4(co,1.);
+				gl_FragColor = vec4(r1,r1,r1,1.);
     }
 `;
 
@@ -407,7 +390,7 @@ function redotex(){
 copyAudioDataToTexture(gl, spectrum, fragSpectrumArray);
 }
 
-let lastUpdateTime = Date.now();
+//let lastUpdateTime = Date.now();
 
 function calcDeltaTime () {
     let now = Date.now();
@@ -441,7 +424,7 @@ function drawDisplay (target) {
     let height = target == null ? gl.drawingBufferHeight : target.height;
 
     displayMaterial.bind();
-  gl.uniform1f(displayMaterial.uniforms.time, performance.now() / 1000);
+  //gl.uniform1f(displayMaterial.uniforms.time, performance.now() / 1000);
   gl.uniform2f(displayMaterial.uniforms.resolution, canvas.width , canvas.height);
 
 
