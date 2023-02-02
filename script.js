@@ -8,6 +8,8 @@ let spectroOffset = 0;
 window.onload = function() {
 	audioContext = new AudioContext();
 
+
+
 	 getUserMedia({
 					 "audio": {
 							 "true": {
@@ -71,10 +73,7 @@ function copyAudioDataToTexture(gl, audioData, textureArray) {
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, audioData.length, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, textureArray)
 }
 
-
 'use strict';
-
-
 
 const canvas = document.getElementsByTagName('canvas')[0];
 resizeCanvas();
@@ -83,8 +82,6 @@ let config = {
     PAUSED: false,
     BACK_COLOR: { r: 0, g: 0, b: 0 },
     TRANSPARENT: false,
-  //  SUNRAYS: true,
-  //  SUNRAYS_RESOLUTION: 1024,
 }
 
 function pointerPrototype () {
@@ -101,15 +98,6 @@ function pointerPrototype () {
 
 const { gl, ext } = getWebGLContext(canvas);
 
-if (isMobile()) {
-    //config.DYE_RESOLUTION = 512;
-  //  config.SUNRAYS_RESOLUTION = 512;
-}
-if (!ext.supportLinearFiltering) {
-  //  config.DYE_RESOLUTION = 512;
-//  config.SUNRAYS_RESOLUTION = 512;
-
-}
 
 function getWebGLContext (canvas) {
     const params = { alpha: true, depth: false, stencil: false, antialias: false, preserveDrawingBuffer: false };
@@ -328,7 +316,7 @@ const displayShaderSource = `
 			uv.x *= resolution.x/resolution.y;
 				float t2 = texture2D(uTex,vec2(length(uv.y*0.3))).x;
 				float t1 = pow(texture2D(uTex,vec2(pow(length(uv.x),2.5))).x,4.);
-				float r1 = clamp(t2+t1,0.,1.);
+				float r1 =(t1+t2);
 				float r2 = mix(r1,1.-r1,smoothstep(0.3,0.4,texture2D(uTex,vec2(0.1))).x);
 				gl_FragColor = vec4(r2,r2,r2,1.);
     }
@@ -425,7 +413,6 @@ function drawDisplay (target) {
     let height = target == null ? gl.drawingBufferHeight : target.height;
 
     displayMaterial.bind();
-  //gl.uniform1f(displayMaterial.uniforms.time, performance.now() / 1000);
   gl.uniform2f(displayMaterial.uniforms.resolution, canvas.width , canvas.height);
 
 
@@ -460,3 +447,28 @@ function scaleByPixelRatio (input) {
     let pixelRatio = window.devicePixelRatio || 1;
     return Math.floor(input * pixelRatio);
 }
+
+window.audiocontext = window.AudioContext || webkitAudioContext;
+var context = new audiocontext();
+var osc = context.createOscillator();
+var vol = context.createGain();
+
+setInterval(sons, 1)
+
+function sons() {
+  var time = context.currentTime;
+
+  var fa =100.;
+  var count =4 ;
+  var real = new Float32Array(count);
+  var imag = new Float32Array(count);
+  for (var i = 1; i < count; i++) {
+   imag[i] = (8 * Math.sin((i * Math.PI+Math.sin(time)*10.+time) / 2))  ;
+  }
+  var wave = context.createPeriodicWave(real, imag);
+  osc.setPeriodicWave(wave);
+  osc.frequency.value =100.;
+  vol.gain.value =Math.min(fa,1.);
+}
+osc.connect(vol).connect(context.destination);
+    osc.start();
