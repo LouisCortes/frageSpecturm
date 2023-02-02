@@ -71,7 +71,7 @@ function createTexture(gl) {
 }
 
 function copyAudioDataToTexture(gl, audioData, textureArray) {
-  for (let i = 0; i < audioData.length*0.5; i++) {
+  for (let i = 0; i < audioData.length*0.1; i++) {
     textureArray[4 * i + 0] = audioData[i] // R
     textureArray[4 * i + 1] = audioData[i] // G
     textureArray[4 * i + 2] = audioData[i] // B
@@ -336,16 +336,16 @@ const displayShaderSource = `
     void main () {
 			vec2 uv = vUv-0.5;
 			uv.x *= resolution.x/resolution.y;
-					float s1 = texture2D(uTex,vec2(length(uv)),0.1).x;
-				float t2 = texture2D(uTex,vec2(length(uv))).x;
-				float ba = smoothstep(1.,0.25,length((vUv.x-0.5)*2.));
-				float t1 = pow(texture2D(uTex,vec2(pow(length(uv.y),2.5))).x,4.)*ba;
+				//	float s1 = texture2D(uTex,vec2(length(uv)),0.1).x;
+				float t2 = texture2D(uTex,vec2(length(uv*0.3))).x;
+				//float ba = smoothstep(1.,0.25,length((vUv.x-0.5)*2.));
+				float t1 = pow(texture2D(uTex,vec2(pow(length(uv.x),2.5))).x,4.);
 				float e = 0.0005;
-				float t3 = floor(pow(texture2D(uTex,vec2(pow(length(uv.y-e),2.5))).x,4.)*20.)/20.;
+			/*	float t3 = floor(pow(texture2D(uTex,vec2(pow(length(uv.y-e),2.5))).x,4.)*20.)/20.;
 				float t4 = floor(pow(texture2D(uTex,vec2(pow(length(uv.y+e),2.5))).x,4.)*20.)/20.;
-				float t5 = normalize(vec2(abs(t3-t4),0.01)).x;
-				float r1 = clamp(t2+t1+t5*0.25*ba,0.,1.);
-				vec3 co = mix(mix(vec3(1.),(3.*abs(1.-2.*fract((r1)*0.5+0.3+vec3(0.,-1./3.,1./3.)))-1.),0.25),vec3(1.,0.,0.),t5*0.25)*r1;
+				float t5 = normalize(vec2(abs(t3-t4),0.01)).x;*/
+				float r1 = clamp(t2+t1,0.,1.);
+				vec3 co = mix(mix(vec3(1.),(3.*abs(1.-2.*fract((r1)*0.5+0.3+vec3(0.,-1./3.,1./3.)))-1.),0.25),vec3(1.,0.,0.),0.25)*r1;
 				gl_FragColor = vec4(co,1.);
     }
 `;
