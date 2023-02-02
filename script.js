@@ -329,7 +329,8 @@ const displayShaderSource = `
 				float t2 = texture2D(uTex,vec2(length(uv*0.3))).x;
 				float t1 = pow(texture2D(uTex,vec2(pow(length(uv.x),2.5))).x,4.);
 				float r1 = clamp(t2+t1,0.,1.);
-				gl_FragColor = vec4(r1,r1,r1,1.);
+				float r2 = mix(r1,1.-r1,smoothstep(0.3,0.4,texture2D(uTex,vec2(0.1))).x);
+				gl_FragColor = vec4(r2,r2,r2,1.);
     }
 `;
 
