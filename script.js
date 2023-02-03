@@ -40,9 +40,20 @@ function gotStream(stream) {
     mediaStreamSource = audioContext.createMediaStreamSource(stream);
     analyser = audioContext.createAnalyser();
     mediaStreamSource.connect( analyser );
+		const filterNode = audioContext.createBiquadFilter();
 
- mediaStreamSource.connect(audioContext.destination);
+		// Set the filter type to low-pass
+		filterNode.type = "lowpass";
 
+		// Set the cutoff frequency for the low-pass filter
+		filterNode.frequency.value = 1000;
+
+		// Connect the media stream source to the filter node
+		mediaStreamSource.connect(filterNode);
+
+		// Connect the filter node to the audio context's destination
+		filterNode.connect(audioContext.destination);
+//mediaStreamSource.connect(audioContext.destination);
 rendertex();
 
 }
