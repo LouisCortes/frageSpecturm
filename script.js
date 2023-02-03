@@ -10,6 +10,7 @@ window.onload = function() {
 
 
 
+
 	 getUserMedia({
 					 "audio": {
 							 "true": {
@@ -17,6 +18,12 @@ window.onload = function() {
 
 					 },}, gotStream);
 };
+
+//window.audiocontext = window.AudioContext || webkitAudioContext;
+//var context = new Audiocontext();
+
+
+
 function getUserMedia(dictionary, callback) {
     try {
         navigator.getUserMedia =
@@ -34,6 +41,8 @@ function gotStream(stream) {
     analyser = audioContext.createAnalyser();
     mediaStreamSource.connect( analyser );
 
+ mediaStreamSource.connect(audioContext.destination);
+
 rendertex();
 
 }
@@ -47,6 +56,19 @@ function rendertex(){
     if (resizeCanvas())
         initFramebuffers();
     render(null);
+
+	/*	var osc = audioContext.createOscillator();
+		var vol = audioContext.createGain();
+		setInterval(sons, 1)
+		function sons() {
+		//	osc.frequency.value =100.;
+	//	oscillator.frequency.setValueCurveAtTimeanalyser.frequencyBinCount, audioContext.currentTime,analyser.frequencyBinCount.length);
+
+			vol.gain.value =0.1;
+		}
+		osc.connect(vol).connect(audioContext.destination);
+				osc.start();*/
+
   }
 
 function error() {
@@ -447,28 +469,3 @@ function scaleByPixelRatio (input) {
     let pixelRatio = window.devicePixelRatio || 1;
     return Math.floor(input * pixelRatio);
 }
-
-window.audiocontext = window.AudioContext || webkitAudioContext;
-var context = new audiocontext();
-var osc = context.createOscillator();
-var vol = context.createGain();
-
-setInterval(sons, 1)
-
-function sons() {
-  var time = context.currentTime;
-
-  var fa =100.;
-  var count =4 ;
-  var real = new Float32Array(count);
-  var imag = new Float32Array(count);
-  for (var i = 1; i < count; i++) {
-   imag[i] = (8 * Math.sin((i * Math.PI+Math.sin(time)*10.+time) / 2))  ;
-  }
-  var wave = context.createPeriodicWave(real, imag);
-  osc.setPeriodicWave(wave);
-  osc.frequency.value =100.;
-  vol.gain.value =Math.min(fa,1.);
-}
-osc.connect(vol).connect(context.destination);
-    osc.start();
