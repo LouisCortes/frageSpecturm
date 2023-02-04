@@ -46,7 +46,7 @@ function gotStream(stream) {
 		filterNode.type = "lowpass";
 
 		// Set the cutoff frequency for the low-pass filter
-		filterNode.frequency.value = 1000;
+		filterNode.frequency.value = 2000;
 
 		// Connect the media stream source to the filter node
 		mediaStreamSource.connect(filterNode);
